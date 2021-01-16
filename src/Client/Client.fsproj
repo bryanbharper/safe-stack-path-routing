@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <DefineConstants>FABLE_COMPILER</DefineConstants>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="index.html" />
+        <None Include="paket.references" />
+        <Compile Include="Pages\Todo.fs" />
+        <Compile Include="Pages\About.fs" />
+        <Compile Include="Pages\Blog.fs" />
+        <Compile Include="Pages\BlogEntry.fs" />
+        <Compile Include="Index.fs" />
+        <Compile Include="App.fs" />
+        <Content Include="public\favicon.png" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Shared\Shared.fsproj" />
+    </ItemGroup>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
