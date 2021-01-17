@@ -107,13 +107,17 @@ let navbar dispatch =
         ]
     ]
 
-let render (state: State) (dispatch: Msg -> unit) =
-    let activePage =
-        match state.CurrentPage with
-        | About -> About.render
-        | Page.Blog state' -> Blog.render state' (Msg.Blog >> dispatch)
-        | Page.BlogEntry state' -> BlogEntry.render state' (Msg.BlogEntry >> dispatch)
-        | Page.Todo state' -> Todo.render state' (Msg.Todo >> dispatch)
-        | Page.NotFound -> NotFound.render
+let getActivePage dispatch currentPage =
+    match currentPage with
+    | About -> About.render
+    | Page.Blog state' -> Blog.render state' (Msg.Blog >> dispatch)
+    | Page.BlogEntry state' -> BlogEntry.render state' (Msg.BlogEntry >> dispatch)
+    | Page.Todo state' -> Todo.render state' (Msg.Todo >> dispatch)
+    | Page.NotFound -> NotFound.render
 
-    [ navbar dispatch; activePage ] |> Html.div
+let render (state: State) (dispatch: Msg -> unit) =
+    [
+      navbar dispatch
+      getActivePage dispatch state.CurrentPage
+    ]
+    |> Html.div
