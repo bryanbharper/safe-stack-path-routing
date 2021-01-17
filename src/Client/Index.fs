@@ -75,14 +75,17 @@ let update (msg: Msg) (state: State): State * Cmd<Msg> =
 *******************************************)
 open Feliz
 open Feliz.Bulma
+open Feliz.Router
+open Client.Components
 
-let navbar dispatch =
+let navbar =
     Bulma.navbar [
         navbar.isFixedTop
         prop.children [
             Bulma.navbarBrand.div [
                 Bulma.navbarItem.a [
-                    prop.onClick (fun _ -> Url.Blog |> Msg.UrlChanged |> dispatch)
+                    "" |> Router.format |> prop.href
+
                     prop.children [
                         Html.img [ prop.src "favicon.png" ]
                     ]
@@ -92,28 +95,38 @@ let navbar dispatch =
                 Bulma.navbarEnd.div [
                     Bulma.navbarItem.a [
                         prop.text Url.About.asString
-                        prop.onClick (fun _ -> Url.About |> Msg.UrlChanged |> dispatch)
+
+                        Url.About.asString |> Router.format |> prop.href
                     ]
                     Bulma.navbarItem.a [
                         prop.text Url.Blog.asString
-                        prop.onClick (fun _ -> Url.Blog |> Msg.UrlChanged |> dispatch)
+
+                        Url.Blog.asString |> Router.format |> prop.href
                     ]
                     Bulma.navbarItem.a [
                         prop.text Url.Todo.asString
-                        prop.onClick (fun _ -> Url.Todo |> Msg.UrlChanged |> dispatch)
+
+                        Url.Todo.asString |> Router.format |> prop.href
                     ]
                 ]
             ]
         ]
     ]
 
-let render (state: State) (dispatch: Msg -> unit) =
-    let activePage =
-        match state.CurrentPage with
-        | About -> About.render
-        | Page.Blog state' -> Blog.render state' (Msg.Blog >> dispatch)
-        | Page.BlogEntry state' -> BlogEntry.render state' (Msg.BlogEntry >> dispatch)
-        | Page.Todo state' -> Todo.render state' (Msg.Todo >> dispatch)
-        | Page.NotFound -> NotFound.render
+let getActivePage dispatch currentPage =
+    match currentPage with
+    | About -> About.render
+    | Page.Blog state' -> Blog.render state' (Msg.Blog >> dispatch)
+    | Page.BlogEntry state' -> BlogEntry.render state' (Msg.BlogEntry >> dispatch)
+    | Page.Todo state' -> Todo.render state' (Msg.Todo >> dispatch)
+    | Page.NotFound -> NotFound.render
 
-    [ navbar dispatch; activePage ] |> Html.div
+let render (state: State) (dispatch: Msg -> unit) =
+    React.router [
+        router.onUrlChanged (Urls.parseFeliz >> UrlChanged >> dispatch)
+
+        router.children [
+            Navbar.render
+            getActivePage dispatch state.CurrentPage
+        ]
+    ]

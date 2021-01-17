@@ -28,3 +28,13 @@ type Url =
                 | _ ->
                     FSharpValue.MakeUnion(case,  [| "" |> box |] ) :?> Url |> Some
             | _ -> None
+
+let parseFeliz url =
+    match url with
+    | [] -> Url.Blog // default page
+    | [ _: string; slug: string ] -> Url.BlogEntry slug
+    | [ page: string ] ->
+        match Url.fromString page with
+        | Some url -> url
+        | None -> Url.NotFound
+    | _ -> Url.NotFound
