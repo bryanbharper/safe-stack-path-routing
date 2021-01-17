@@ -1,5 +1,7 @@
 ﻿module Client.Pages.Blog
 
+open Client.Urls
+
 type Entry =
     {
         Slug: string
@@ -36,9 +38,10 @@ let update msg state =
 open Feliz
 open Feliz.Bulma
 
+let (</>) a b = sprintf "%s/%s" a b
 let renderEntry dispatch entry: ReactElement =
     Html.a [
-        prop.onClick (fun _ -> entry.Slug |> Msg.EntryClicked |> dispatch)
+        Url.Blog.asString </> entry.Slug |> prop.href
         entry.Title |> prop.text
     ]
 

@@ -39,10 +39,19 @@ let webApp =
     |> Remoting.fromValue todosApi
     |> Remoting.buildHttpHandler
 
+open Giraffe.Core
+open Giraffe.ResponseWriters
+
+let fallback = router {
+    not_found_handler (setStatusCode 200 >=> htmlFile "public/index.html")
+}
+
+let api: HttpHandler = choose [ webApp; fallback ]
+
 let app =
     application {
         url "http://0.0.0.0:8085"
-        use_router webApp
+        use_router api
         memory_cache
         use_static "public"
         use_gzip
