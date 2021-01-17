@@ -11,6 +11,7 @@ type Page =
     | Blog of Blog.State
     | BlogEntry of BlogEntry.State
     | Todo of Todo.State
+    | NotFound
 
 type State = { CurrentPage: Page }
 
@@ -38,6 +39,7 @@ let initFromUrl url =
     | Url.Todo ->
         let s, c = Todo.init ()
         { CurrentPage = Page.Todo s }, Cmd.map Msg.Todo c
+    | Url.NotFound -> { CurrentPage = NotFound }, Cmd.none
 
 let init (): State * Cmd<Msg> =
     let state, cmd = Blog.init ()
@@ -112,5 +114,6 @@ let render (state: State) (dispatch: Msg -> unit) =
         | Page.Blog state' -> Blog.render state' (Msg.Blog >> dispatch)
         | Page.BlogEntry state' -> BlogEntry.render state' (Msg.BlogEntry >> dispatch)
         | Page.Todo state' -> Todo.render state' (Msg.Todo >> dispatch)
+        | Page.NotFound -> NotFound.render
 
     [ navbar dispatch; activePage ] |> Html.div
