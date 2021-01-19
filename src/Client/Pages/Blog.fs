@@ -39,7 +39,7 @@ open Feliz
 open Feliz.Bulma
 
 let (</>) a b = sprintf "%s/%s" a b
-let renderEntry dispatch entry: ReactElement =
+let renderEntry entry: ReactElement =
     Html.a [
         Url.Blog.asString </> entry.Slug |> prop.href
         entry.Title |> prop.text
@@ -47,7 +47,7 @@ let renderEntry dispatch entry: ReactElement =
 
 let render state (dispatch: Msg -> unit) =
     state.Entries
-    |> List.map (renderEntry dispatch)
+    |> List.map renderEntry
     |> List.map Html.li
     |> Html.ul
     |> List.singleton
