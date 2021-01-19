@@ -3,6 +3,7 @@ module Client.Index
 (*******************************************
 *               TYPES
 *******************************************)
+open Client.Components
 open Client.Pages
 open Client.Urls
 
@@ -117,7 +118,7 @@ let getActivePage dispatch currentPage =
 
 let render (state: State) (dispatch: Msg -> unit) =
     [
-      navbar dispatch
+      Navbar.render Msg.UrlChanged dispatch
       getActivePage dispatch state.CurrentPage
     ]
     |> Html.div

@@ -8,6 +8,7 @@
         <None Include="index.html" />
         <None Include="paket.references" />
         <Compile Include="Urls.fs" />
+        <Compile Include="Components\Navbar.fs" />
         <Compile Include="Pages\Todo.fs" />
         <Compile Include="Pages\About.fs" />
         <Compile Include="Pages\Blog.fs" />
